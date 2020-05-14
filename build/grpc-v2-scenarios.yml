@@ -57,10 +57,10 @@ parameters:
   default:
     - displayName: "Call: Unary"
       arguments: --variable scenario=unary --property scenario=unary
-    - displayName: "Call: Server Streaming"
-      arguments: --variable scenario=serverstreaming --property scenario=serverstreaming
-    - displayName: "Call: Ping Pong Streaming"
-      arguments: --variable scenario=pingpongstreaming --property scenario=pingpongstreaming
+#    - displayName: "Call: Server Streaming"
+#      arguments: --variable scenario=serverstreaming --property scenario=serverstreaming
+#    - displayName: "Call: Ping Pong Streaming"
+#      arguments: --variable scenario=pingpongstreaming --property scenario=pingpongstreaming
 
 - name: protocols
   type: object
@@ -73,6 +73,8 @@ parameters:
   default:
     - displayName: "Payload: 0 B"
       arguments: --variable requestSize=0 --variable responseSize=0 --property payload=0
+#    - displayName: "Payload: 1 MB"
+#      arguments: --variable requestSize=1048576 --variable responseSize=1048576 --property payload=1048576
 
 - name: connectionStreams
   type: object
@@ -97,9 +99,9 @@ steps:
           connectedServiceName: ${{ parameters.connection }}
           waitForCompletion: true
           messageBody: |
-            {
-              "name": "benchmarksdriver2",
-              "args": [ "--application.aspnetcoreversion Latest --table GrpcBenchmarks --sql SQL_CONNECTION_STRING --session $(session) --profile ${{ parameters.profile }} --no-metadata --no-measurements --load.variables.duration ${{ parameters.duration }} --load.variables.warmup ${{ parameters.warmup }} ${{ s.arguments }} ${{ protocol.arguments }} ${{ stream.arguments }} --property scenario=unary --property payload=0 --variable body=AAAAAAcKBVdvcmxk --variable path=/grpc.testing.BenchmarkService/UnaryCall" ]	
+            {	
+              "name": "benchmarksdriver2",	
+              "args": [ "--application.aspnetcoreversion Latest --table GrpcBenchmarks --session $(session) --profile ${{ parameters.profile }} --no-metadata --no-measurements --load.variables.duration ${{ parameters.duration }} --load.variables.warmup ${{ parameters.warmup }} ${{ s.arguments }} ${{ protocol.arguments }} ${{ stream.arguments }} --property scenario=unary --property payload=0 --variable body=AAAAAAcKBVdvcmxk --variable path=/grpc.testing.BenchmarkService/UnaryCall" ]	
             }
 - ${{ each s in parameters.scenarios }}:
   - ${{ each callType in parameters.callTypes }}:
@@ -115,5 +117,5 @@ steps:
               messageBody: |
                 {
                   "name": "benchmarksdriver2",
-                  "args": [ "--application.aspnetcoreversion Latest --load.runtimeversion 5.0.* --load.sdkVersion Latest --table GrpcBenchmarks --sql SQL_CONNECTION_STRING --session $(session) --profile ${{ parameters.profile }} --no-metadata --no-measurements --load.variables.duration ${{ parameters.duration }} --load.variables.warmup ${{ parameters.warmup }} ${{ s.arguments }} ${{ callType.arguments }} ${{ payload.arguments }} ${{ protocol.arguments }} ${{ stream.arguments }}" ]
+                  "args": [ "--application.aspnetcoreversion Latest --load.runtimeversion 5.0.* --load.sdkVersion Latest --table GrpcBenchmarks --session $(session) --profile ${{ parameters.profile }} --no-metadata --no-measurements --load.variables.duration ${{ parameters.duration }} --load.variables.warmup ${{ parameters.warmup }} ${{ s.arguments }} ${{ callType.arguments }} ${{ payload.arguments }} ${{ protocol.arguments }} ${{ stream.arguments }}" ]
                 }
