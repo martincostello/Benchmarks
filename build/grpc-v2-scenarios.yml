@@ -89,20 +89,6 @@ parameters:
       arguments: --variable streams=70 --variable connections=1 --variable threads=1 --property streams=70x1
 
 steps:
-- ${{ each s in parameters.h2loadscenarios }}:
-  - ${{ each protocol in parameters.protocols }}:
-    - ${{ each stream in parameters.connectionStreams }}:
-      - task: PublishToAzureServiceBus@1
-        condition: succeededOrFailed()
-        displayName: ${{ s.displayName }} ${{ protocol.displayName }} ${{ stream.displayName }}
-        inputs:
-          connectedServiceName: ${{ parameters.connection }}
-          waitForCompletion: true
-          messageBody: |
-            {	
-              "name": "benchmarksdriver2",	
-              "args": [ "--application.aspnetcoreversion Latest --table GrpcBenchmarks --session $(session) --profile ${{ parameters.profile }} --no-metadata --no-measurements --load.variables.duration ${{ parameters.duration }} --load.variables.warmup ${{ parameters.warmup }} ${{ s.arguments }} ${{ protocol.arguments }} ${{ stream.arguments }} --property scenario=unary --property payload=0 --variable body=AAAAAAcKBVdvcmxk --variable path=/grpc.testing.BenchmarkService/UnaryCall" ]	
-            }
 - ${{ each s in parameters.scenarios }}:
   - ${{ each callType in parameters.callTypes }}:
     - ${{ each payload in parameters.payloads }}:
